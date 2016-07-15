@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<!--通知 Windows Internet Explorer 以最高级别的可用模式显示内容-->
+
+<title>物流可视化</title>
+<script src="/static/js/jquery-1.7.2.min.js"></script>
+
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow:hidden;
+            padding: 0;
+            font-family: 'Microsoft YaHei';
+            background:#AEAEAE;
+        }
+        div#bottom{
+        //border: 1px solid red;
+        position: absolute;
+        bottom: 0px;
+        width: 100%;
+        height: 30px;
+        padding-bottom: 5px;
+        //background: #0d0d0d;
+        
+            background-size:100% 100%;
+        }
+        #title{
+            //border:1px solid #292929;
+            height:25px;
+            width:100px;
+            margin:0 auto;
+            border-radius: 6px;
+            background: #AEAEAE;
+            display:none;//隐藏导航栏
+        }
+        #ul-title{
+        margin-left: 15%;
+        margin-top: 7px;
+        
+        list-style: none;
+        margin-bottom: 3px;
+        }
+        .li-title{
+            //border:1px solid #292929;
+            width:97px;
+            height:22px;
+            float:left;
+            margin-left:20px;
+            text-align: center;
+            color: #c6cacd;
+            font-size: 11px;
+            line-height: 22px;
+        }
+        .a-title{
+            color: #303030;
+            font-size: 1.1em;
+            text-align: center;
+            margin: 0 auto;
+            padding-left: 30%;
+            
+        }
+        a:hover {
+            
+            background-size:100% 100%;
+            cursor:pointer;
+            }    /* 当有鼠标悬停在链接上 */
+        a:active {
+            
+            background-size:100% 100%;
+            
+            }   /* 被选择的链接 *
+        div#center{
+            height: 100%;
+            width: 100%;
+            border: 1px solid blue;
+            bottom: 27px;
+            position: absolute;
+        }
+        #newiframe{
+            height:100%;
+            width:100%;
+            border: none;
+            margin: 0;
+            overflow:hidden;
+        }
+        .a-title#a-title8{
+            width:120px;
+        }
+    }
+</style>
+<script type="text/javascript">
+
+    
+
+
+var hrefs = 
+    {
+//         'KPI概览':       '/hd',
+        '概览':        '/sinolube/sub/',
+       
+    };
+    
+    
+$(function(){
+     ck('概览');
+     
+     
+})
+    function hover(name){
+        $('#title a').css({
+        'background':'url("/static/images/导航标题未选中.png")',
+        'background-size':"100% 100%",
+        'color':'#fff',
+            })
+        $('a[name="'+name+'"]').css({
+        'background':'url("/static/images/导航标题覆盖.png")',
+        'background-size':"100% 100%",
+//         'color':'#AD9D9D',
+        })
+        $('a[name="'+selected+'"]').css({
+        'background':'url("/static/images/导航标题选中.png")',
+        'background-size':"100% 100%",
+        'color':'#fff',
+        })
+    }
+    function out(name){
+        if(name!=selected){
+            $('a[name="'+name+'"]').css({
+            'background':'url("/static/images/导航标题未选中.png")',
+            'background-size':"100% 100%",
+            'color':'#fff',
+            })
+            }
+        }
+    
+   var selected=''
+    function ck(name){
+        selected=name;
+    
+        $("iframe").attr("src","about:blank"); 
+//            $("#preloading").css('display', 'block'); //显示正在加载div
+            
+            if(name!=''){
+            $("#preloading").css('display', 'block'); //显示正在加载div
+                $.ajax({
+                    type: "POST",
+                    url: hrefs[name],
+                    dataType: "json",
+                    data:{"csrfmiddlewaretoken":$("input[name=csrfmiddlewaretoken]").val()},
+                    cache: false,
+                    success: function(data,status){
+                        $("#Project").val(data['Project']);
+                        $("#currentViewMedia").val(data['currentViewMedia']);
+                        $("#documentID").val(data['documentID']);
+                        $("#evt").val(data['evt']);
+                        $("#hiddensections").val(data['hiddensections']);
+                        $("#port").val(data['port']);
+                        $("#pwd").val(data['pwd']);
+                        $("#server").val(data['server']);
+                        $("#share").val(data['share']);
+                        $("#src").val(data['src']);
+                        $("#title").val(data['title']);
+                        $("#uid").val(data['uid']);
+                        $("#visMode").val(data['visMode']);
+                        $("#queryform").attr("action",data['mstraddr'])
+                        $("#queryform").attr("target",title);
+                        $("#innerWidth").val($(window).width());
+//                         $("#innerWidth").val(1530);//华南演示机器
+                        $("#innerHeight").val(window.innerHeight);
+//                         $("iframe[name='"+title+"']").attr("width",window.innerWidth+'px'); 
+//                         $("iframe[name='"+title+"']").attr("height",window.innerHeight+'px'); 
+                        $("#t").val(new Date().getTime());
+                        var src = data['mstraddr']+"?"+$("#queryform input").serialize();
+//                         console.log(src);
+                        //$('#queryform').submit();
+                        $("iframe").attr("src",src);
+                    }
+                })
+            }
+            } 
+    
+    
+
+  
+
+function IframeOnload(title)
+{
+    var src = $("iframe[name='"+title+"']").attr("src");
+    
+    if(!( (src == "about:blank") || (src ==undefined )))
+    {
+       $("#preloading").css('display', 'none');
+    }
+}
+</script>   
+{% block extrahead %}{% endblock %}
+</head>
+<body id="layout" class="easyui-layout" style="height: 100%;">
+	<div id="preloading" style="display: none;position: absolute;height: 100%;width: 100%;z-index: 5;
+            background:url({{STATIC_URL}}images/preloading.gif) no-repeat center center;background-color: white;opacity: 0.5;  
+            filter: alpha(opacity=50); ">
+    </div>
+    
+        <iframe class="newiframe" name="newiframe" id="newiframe" onload="IframeOnload('newiframe')" width="100%" height="100%" style='border:none'></iframe>
+
+    
+    
+    <div id='bottom'>
+        <div id='title'>            
+            <a id='a-title1' name='概览' class='a-title' onclick='ck("概览")' onmouseover='hover("概览")' onmouseout='out("概览")'>概览                        
+            </a>  
+            
+
+        </div>  
+        
+               
+                
+    </div>
+{% csrf_token %}
+<form style="display:none" id="queryform" action="{{mstraddr}}" target="my-iframe" method="post" onsubmit="">
+    <input type="text" name="evt" id="evt" value="{{evt}}">
+    <input type="text" name="src" id="src" value="{{src}}">                            
+    <input type="text" name="visMode" id="visMode" value="{{visMode}}">
+    <input type="text" name="currentViewMedia" id="currentViewMedia" value="{{currentViewMedia}}">
+    <input type="text" name="documentID" id="documentID" value="{{documentID}}">
+    
+    <input type="text" name="server" id="server" value="{{server}}">
+    <input type="text" name="Project" id="Project" value="{{Project}}">
+    <input type="text" name="port" id="port" value="{{port}}">
+    <input type="text" name="share" id="share" value="{{share}}">
+    <input type="text" name="hiddensections" id="hiddensections" value="{{hiddensections}}"> 
+    
+    <input type="text" name="uid" id="uid" value="{{uid}}">
+    <input type="text" name="pwd" id="pwd" value="{{pwd}}">
+    <input type="text" name="promptAnswerMode" id="promptAnswerMode" value="{{promptAnswerMode}}">
+    
+    <input type="text" name="innerWidth" id="innerWidth" >
+    <input type="text" name="innerHeight" id="innerHeight" >
+    <input type="text" name="t" id="t" >
+    
+</form>
+    <input type='hidden' id='title' name='title' value='{{title}}'>
+    {% csrf_token %}
+
+{% block maincontent %}{% endblock %}
+
+</body>
+
+</html>

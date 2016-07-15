@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="DEV_DW" uuid="d68a9436-6c7d-4e53-82ec-eed045559b71">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+  <data-source name="TEST_OC" uuid="6025c91d-0b3b-4e0a-b9a4-afc80296f467">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+</component>
